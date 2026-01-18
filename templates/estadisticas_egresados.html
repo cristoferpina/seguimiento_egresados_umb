@@ -1,0 +1,457 @@
+<div class="card" style="margin-top: 120px;">
+    <div class="card-header text-center bg-primary text-white">
+        <h3>📊 Estadísticas de Egresados</h3>
+        <p class="mb-0">Análisis del estado de titulación</p>
+    </div>
+    <div class="card-body">
+        {% if egresados %}
+        
+        <!-- Tarjetas de resumen -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card text-center border-primary">
+                    <div class="card-body">
+                        <h2 class="display-4 text-primary" id="totalEgresados">{{ egresados|length }}</h2>
+                        <p class="card-text">Total Egresados</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center border-success">
+                    <div class="card-body">
+                        <h2 class="display-4 text-success" id="totalTitulados">0</h2>
+                        <p class="card-text">✓ Titulados</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center border-warning">
+                    <div class="card-body">
+                        <h2 class="display-4 text-warning" id="totalATiempo">0</h2>
+                        <p class="card-text">⏳ A Tiempo</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center border-danger">
+                    <div class="card-body">
+                        <h2 class="display-4 text-danger" id="totalFueraTiempo">0</h2>
+                        <p class="card-text">✗ Fuera de Tiempo</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráficas -->
+        <div class="row">
+            <!-- Gráfica de pastel: Estado de titulación -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h5>Estado de Titulación</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="chartEstadoTitulacion" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráfica de barras: Por generación -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h5>Titulados vs No Titulados por Generación</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="chartPorGeneracion" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráfica de línea: Tiempo transcurrido -->
+        <div class="row">
+            <div class="col-md-12 mb-4">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h5>Distribución por Años Transcurridos desde Egreso</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="chartTiempoTranscurrido" height="100"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla detallada -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h5>📋 Detalle por Estado</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="nav nav-tabs" id="tabEstados" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="tab-titulados" data-bs-toggle="tab" data-bs-target="#contenido-titulados" type="button" role="tab">
+                                    ✓ Titulados (<span id="countTitulados">0</span>)
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="tab-atiempo" data-bs-toggle="tab" data-bs-target="#contenido-atiempo" type="button" role="tab">
+                                    ⏳ A Tiempo (<span id="countATiempo">0</span>)
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="tab-fueratiempo" data-bs-toggle="tab" data-bs-target="#contenido-fueratiempo" type="button" role="tab">
+                                    ✗ Fuera de Tiempo (<span id="countFueraTiempo">0</span>)
+                                </button>
+                            </li>
+                        </ul>
+                        <div class="tab-content mt-3" id="tabEstadosContent">
+                            <div class="tab-pane fade show active" id="contenido-titulados" role="tabpanel">
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-hover">
+                                        <thead class="table-success">
+                                            <tr>
+                                                <th>Nombre</th>
+                                                <th>Matrícula</th>
+                                                <th>Generación</th>
+                                                <th>Años desde Egreso</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tablaTitulados"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="contenido-atiempo" role="tabpanel">
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-hover">
+                                        <thead class="table-warning">
+                                            <tr>
+                                                <th>Nombre</th>
+                                                <th>Matrícula</th>
+                                                <th>Generación</th>
+                                                <th>Años desde Egreso</th>
+                                                <th>Tiempo Restante</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tablaATiempo"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="contenido-fueratiempo" role="tabpanel">
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-hover">
+                                        <thead class="table-danger">
+                                            <tr>
+                                                <th>Nombre</th>
+                                                <th>Matrícula</th>
+                                                <th>Generación</th>
+                                                <th>Años desde Egreso</th>
+                                                <th>Exceso de Tiempo</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tablaFueraTiempo"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% else %}
+        <div class="alert alert-warning text-center">
+            <h4>⚠️ No hay datos disponibles</h4>
+            <p>No se encontraron egresados registrados en el sistema.</p>
+        </div>
+        {% endif %}
+    </div>
+    <div class="card-footer text-muted">Todos los derechos reservados</div>
+</div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<script>
+(function() {
+    console.log('📊 Iniciando estadísticas');
+
+    const egresadosData = {{ egresados | tojson | safe }};
+    const egresados = egresadosData || [];
+    const añoActual = 2025;
+
+    // Clasificar egresados
+    const clasificados = {
+        titulados: [],
+        aTiempo: [],
+        ultimoAño: [],
+        fueraDeTiempo: [],
+        enCurso: []
+    };
+
+    egresados.forEach(eg => {
+        const generacion = eg.generacion || '';
+        const partes = generacion.split('-');
+        const añoEgreso = partes.length > 1 ? parseInt(partes[1]) : parseInt(generacion);
+        const añosTranscurridos = añoActual - añoEgreso;
+        const titulado = (eg.estatus_titulacion || '').toLowerCase() === 'titulado';
+
+        const datos = {
+            nombre: `${eg.nombre_encargado || ''} ${eg.apellido_paterno || ''} ${eg.apellido_materno || ''}`.trim(),
+            matricula: eg.matricula || 'N/A',
+            generacion: generacion,
+            añoEgreso: añoEgreso,
+            añosTranscurridos: añosTranscurridos,
+            titulado: titulado
+        };
+
+        if (titulado) {
+            clasificados.titulados.push(datos);
+        } else if (añosTranscurridos < 0) {
+            clasificados.enCurso.push(datos);
+        } else if (añosTranscurridos < 9) {
+            clasificados.aTiempo.push(datos);
+        } else if (añosTranscurridos === 9) {
+            clasificados.ultimoAño.push(datos);
+        } else {
+            clasificados.fueraDeTiempo.push(datos);
+        }
+    });
+
+    // Actualizar tarjetas de resumen
+    document.getElementById('totalTitulados').textContent = clasificados.titulados.length;
+    document.getElementById('totalATiempo').textContent = clasificados.aTiempo.length + clasificados.ultimoAño.length;
+    document.getElementById('totalFueraTiempo').textContent = clasificados.fueraDeTiempo.length;
+
+    // Actualizar contadores en tabs
+    document.getElementById('countTitulados').textContent = clasificados.titulados.length;
+    document.getElementById('countATiempo').textContent = clasificados.aTiempo.length + clasificados.ultimoAño.length;
+    document.getElementById('countFueraTiempo').textContent = clasificados.fueraDeTiempo.length;
+
+    // Llenar tablas
+    function llenarTabla(idTabla, datos, esTitulado = false) {
+        const tbody = document.getElementById(idTabla);
+        tbody.innerHTML = '';
+        
+        if (datos.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No hay registros</td></tr>';
+            return;
+        }
+
+        datos.forEach(d => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${d.nombre}</td>
+                <td>${d.matricula}</td>
+                <td>${d.generacion}</td>
+                <td class="text-center">${d.añosTranscurridos >= 0 ? d.añosTranscurridos : 'En curso'}</td>
+                ${esTitulado ? '' : d.añosTranscurridos >= 10 
+                    ? `<td class="text-danger text-center">${d.añosTranscurridos - 10} años de exceso</td>`
+                    : `<td class="text-success text-center">${10 - d.añosTranscurridos} años restantes</td>`
+                }
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    llenarTabla('tablaTitulados', clasificados.titulados, true);
+    llenarTabla('tablaATiempo', [...clasificados.aTiempo, ...clasificados.ultimoAño]);
+    llenarTabla('tablaFueraTiempo', clasificados.fueraDeTiempo);
+
+    // GRÁFICA 1: Estado de Titulación (Pastel)
+    const ctxEstado = document.getElementById('chartEstadoTitulacion');
+    if (ctxEstado) {
+        new Chart(ctxEstado, {
+            type: 'pie',
+            data: {
+                labels: ['✓ Titulados', '⏳ A Tiempo', '⚠️ Último Año', '✗ Fuera de Tiempo'],
+                datasets: [{
+                    data: [
+                        clasificados.titulados.length,
+                        clasificados.aTiempo.length,
+                        clasificados.ultimoAño.length,
+                        clasificados.fueraDeTiempo.length
+                    ],
+                    backgroundColor: ['#28a745', '#ffc107', '#fd7e14', '#dc3545'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const porcentaje = ((context.parsed / total) * 100).toFixed(1);
+                                return `${context.label}: ${context.parsed} (${porcentaje}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // GRÁFICA 2: Por Generación (Barras)
+    const generaciones = {};
+    egresados.forEach(eg => {
+        const gen = eg.generacion || 'Sin dato';
+        if (!generaciones[gen]) {
+            generaciones[gen] = { titulados: 0, noTitulados: 0 };
+        }
+        const titulado = (eg.estatus_titulacion || '').toLowerCase() === 'titulado';
+        if (titulado) {
+            generaciones[gen].titulados++;
+        } else {
+            generaciones[gen].noTitulados++;
+        }
+    });
+
+    const generacionesOrdenadas = Object.keys(generaciones).sort();
+    const ctxGeneracion = document.getElementById('chartPorGeneracion');
+    if (ctxGeneracion) {
+        new Chart(ctxGeneracion, {
+            type: 'bar',
+            data: {
+                labels: generacionesOrdenadas,
+                datasets: [
+                    {
+                        label: '✓ Titulados',
+                        data: generacionesOrdenadas.map(g => generaciones[g].titulados),
+                        backgroundColor: '#28a745',
+                        borderColor: '#1e7e34',
+                        borderWidth: 1
+                    },
+                    {
+                        label: '✗ No Titulados',
+                        data: generacionesOrdenadas.map(g => generaciones[g].noTitulados),
+                        backgroundColor: '#dc3545',
+                        borderColor: '#bd2130',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { stacked: false },
+                    y: { 
+                        stacked: false,
+                        beginAtZero: true,
+                        ticks: { stepSize: 1 }
+                    }
+                },
+                plugins: {
+                    legend: { position: 'top' }
+                }
+            }
+        });
+    }
+
+    // GRÁFICA 3: Distribución por años transcurridos
+    const distribucionAños = {};
+    for (let i = 0; i <= 15; i++) {
+        distribucionAños[i] = 0;
+    }
+
+    egresados.forEach(eg => {
+        const generacion = eg.generacion || '';
+        const partes = generacion.split('-');
+        const añoEgreso = partes.length > 1 ? parseInt(partes[1]) : parseInt(generacion);
+        const añosTranscurridos = añoActual - añoEgreso;
+        
+        if (añosTranscurridos >= 0 && añosTranscurridos <= 15) {
+            distribucionAños[añosTranscurridos]++;
+        }
+    });
+
+    const ctxTiempo = document.getElementById('chartTiempoTranscurrido');
+    if (ctxTiempo) {
+        new Chart(ctxTiempo, {
+            type: 'line',
+            data: {
+                labels: Object.keys(distribucionAños).map(a => `${a} años`),
+                datasets: [{
+                    label: 'Cantidad de Egresados',
+                    data: Object.values(distribucionAños),
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 1 }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    annotation: {
+                        annotations: {
+                            line1: {
+                                type: 'line',
+                                xMin: 9,
+                                xMax: 9,
+                                borderColor: 'red',
+                                borderWidth: 2,
+                                borderDash: [5, 5],
+                                label: {
+                                    content: 'Límite (10 años)',
+                                    enabled: true,
+                                    position: 'end'
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    console.log('✅ Estadísticas cargadas');
+})();
+</script>
+
+<style>
+    .card {
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    
+    .display-4 {
+        font-weight: bold;
+    }
+    
+    canvas {
+        max-height: 400px;
+    }
+    
+    .table-responsive {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    
+    .nav-tabs .nav-link {
+        color: #495057;
+    }
+    
+    .nav-tabs .nav-link.active {
+        font-weight: bold;
+    }
+</style>

@@ -1,0 +1,460 @@
+<!-- Modal Body -->
+<!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
+<div class="modal fade" id="modalregistroegresado" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+    role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitleId">
+                    Registro de egresado
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <form method="post" enctype="multipart/form-data" id="registro_egresado">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" class="form-control" name="nombre_encargado" id="nombre_encargado" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Apellido Paterno</label>
+                        <input type="text" class="form-control" name="apellido_paterno" id="apellido_paterno" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Apellido Materno</label>
+                        <input type="text" class="form-control" name="apellido_materno" id="apellido_materno" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Telefono</label>
+                        <input type="text" class="form-control" name="telefono" id="telefono" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Correo electronico</label>
+                        <input type="email" class="form-control" name="correo" id="correo" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Número interior</label>
+                        <input type="text" class="form-control" name="ni" id="ni" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Número Exterior</label>
+                        <input type="text" class="form-control" name="ne" id="ne" required>
+                    </div>
+                    <label class="form-label">Estatus laboral</label>
+                    <select class="form-select" name="estatus_laboral" id="estatus_laboral" required>
+                        <option value="">Seleccione una opción</option>
+                        <option value="Empleado">Empleado</option>
+                        <option value="Desempleado">Desempleado</option>
+                    </select>
+
+                    <div class="mb-3" id="grupo_tipo_trabajo" style="display:none;">
+                        <label class="form-label">Tipo de trabajo</label>
+                        <input type="text" class="form-control" name="tipo_trabajo" id="tipo_trabajo"
+                            placeholder="Ej. Docente, Ingeniero, Administrativo...">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Estatus de titulación</label>
+                        <select class="form-select" name="estatus_titulacion" id="estatus_titulacion" required>
+                            <option value="">Seleccion una opción</option>
+                            <option value="En proceso">En proceso</option>
+                            <option value="No titulado">No titulado</option>
+                            <option value="Titulado">Titulado</option>
+                            <option value="Pendiente">Pendiente</option>
+                        </select>
+                    </div>
+                    <div class="mb-3" id="grupo_modalidad" style="display:none;">
+                        <label class="form-label">Modalidad de Titulación</label>
+                        <select class="form-select" name="modalidad" id="modalidad">
+                            <option value="">Seleccione una opción</option>
+                            <option value="I">I. Tesis profesional</option>
+                            <option value="II">II. Proyecto</option>
+                            <option value="III">III. Seminario de titulación</option>
+                            <option value="IV">IV. Posgrado</option>
+                            <option value="V">V. Promedio General Sobresaliente</option>
+                            <option value="VI">VI. Memoria de experiencia profesional</option>
+                            <option value="VII">VII. Examen EGEL</option>
+                            <option value="VIII">VIII. Residencia profesional</option>
+                            <option value="IX">IX. Mérito Escolar</option>
+                            <option value="X">X. Intervención en la gestión docente</option>
+                            <option value="XI">XI. Memoria de servicio social</option>
+                        </select>
+                    </div>
+                    <div class="mb-3" id="grupo_archivo_modalidad" style="display:none;">
+                        <label class="form-label">Subir documento (PDF) de acreditación</label>
+                        <input type="file" class="form-control" name="archivo_modalidad" id="archivo_modalidad"
+                            accept=".pdf">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Matricula</label>
+                        <input type="text" class="form-control" name="matricula" id="matricula" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Generación</label>
+                        <input type="text" class="form-control" name="generacion" id="generacion" required
+                            placeholder="Ej. 2005-2009">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" name="password" id="password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Carrera</label>
+                        <select name="id_carrera" id="id_carrera" class="form-select" required>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Perfil profesional</label>
+                        <input type="text" name="perfil" id="perfil" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">UES procedencia</label>
+                        <select name="id_ues" id="id_ues" class="form-select" required>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Municipio</label>
+                        <select name="id_municipio" id="id_municipio" class="form-select" required>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Localidad</label>
+                        <select class="form-select" id="id_localidad" name="id_localidad" required disabled>
+                            <option value="">Seleccione una Localidad</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="fotografiaegr">Fotografia del egresado</label>
+                        <input class="form-control-file" type="file" name="fotografiaegr" id="fotografiaegr"
+                            accept="image/*" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-center">
+                            <img src="{{url_for('static', filename = 'images/oswald.png')}}"
+                                alt="fotografia del egresado" id="previewegr">
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cerrar
+                </button>
+                <button type="button" class="btn btn-primary" id="btn_registro_egresado">Registrar</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    (function () {
+        const estatus = document.getElementById('estatus_titulacion');
+        const grupoModalidad = document.getElementById('grupo_modalidad');
+        const modalidad = document.getElementById('modalidad');
+
+        function toggleModalidad() {
+            const v = estatus.value;
+            const mostrar = (v === 'Titulado' || v === 'En proceso');
+            grupoModalidad.style.display = mostrar ? 'block' : 'none';
+            if (mostrar) {
+                modalidad.setAttribute('required', 'required');
+            } else {
+                modalidad.removeAttribute('required');
+                modalidad.value = '';
+            }
+        }
+
+        estatus.addEventListener('change', toggleModalidad);
+        const modal = document.getElementById('modalregistroegresado');
+        modal.addEventListener('shown.bs.modal', toggleModalidad);
+        document.addEventListener('DOMContentLoaded', toggleModalidad);
+    })();
+</script>
+
+<script>
+    (function () {
+        const estatusLaboral = document.getElementById('estatus_laboral');
+        const grupoTipoTrabajo = document.getElementById('grupo_tipo_trabajo');
+        const tipoTrabajo = document.getElementById('tipo_trabajo');
+
+        function toggleTipoTrabajo() {
+            const mostrar = estatusLaboral.value === 'Empleado';
+            grupoTipoTrabajo.style.display = mostrar ? 'block' : 'none';
+            if (mostrar) {
+                tipoTrabajo.setAttribute('required', 'required');
+            } else {
+                tipoTrabajo.removeAttribute('required');
+                tipoTrabajo.value = '';
+            }
+        }
+
+        estatusLaboral.addEventListener('change', toggleTipoTrabajo);
+        document.addEventListener('DOMContentLoaded', toggleTipoTrabajo);
+    })();
+</script>
+
+<script>
+    (function () {
+        const estatus = document.getElementById('estatus_titulacion');
+        const grupoModalidad = document.getElementById('grupo_modalidad');
+        const modalidad = document.getElementById('modalidad');
+        const grupoArchivoModalidad = document.getElementById('grupo_archivo_modalidad');
+        const archivoModalidad = document.getElementById('archivo_modalidad');
+
+        function toggleModalidad() {
+            const v = estatus.value;
+            const mostrar = (v === 'Titulado' || v === 'Pendiente');
+            grupoModalidad.style.display = mostrar ? 'block' : 'none';
+            if (mostrar) {
+                modalidad.setAttribute('required', 'required');
+            } else {
+                modalidad.removeAttribute('required');
+                modalidad.value = '';
+                grupoArchivoModalidad.style.display = 'none';
+                archivoModalidad.removeAttribute('required');
+                archivoModalidad.value = '';
+            }
+        }
+
+        function toggleArchivoModalidad() {
+            const valor = modalidad.value;
+            const mostrarArchivo = (valor === 'I' || valor === 'II' || valor === 'III' || valor === 'VI' || valor === 'VIII' || valor === 'XI');
+            grupoArchivoModalidad.style.display = mostrarArchivo ? 'block' : 'none';
+            if (mostrarArchivo) {
+                archivoModalidad.setAttribute('required', 'required');
+            } else {
+                archivoModalidad.removeAttribute('required');
+                archivoModalidad.value = '';
+            }
+        }
+
+        estatus.addEventListener('change', toggleModalidad);
+        modalidad.addEventListener('change', toggleArchivoModalidad);
+        document.addEventListener('DOMContentLoaded', () => {
+            toggleModalidad();
+            toggleArchivoModalidad();
+        });
+    })();
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const selectCarrera = document.getElementById('id_carrera');
+        const modal = document.getElementById('modalregistroegresado');
+
+        async function cargarCarreras() {
+            try {
+                const res = await fetch('/consulta_carrera');
+                const data = await res.json();
+                selectCarrera.innerHTML = '<option value="">Seleccione una carrera</option>';
+                data.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id_carrera;
+                    opt.textContent = c.nombre_carrera;
+                    selectCarrera.appendChild(opt);
+                });
+            } catch (error) {
+                console.error('Error al cargar las carreras:', error);
+                selectCarrera.innerHTML = '<option value"">Error al cargar carreras</option>';
+            }
+        }
+        modal.addEventListener('shown.bs.modal', cargarCarreras);
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const selectUes = document.getElementById('id_ues');
+        const modal = document.getElementById('modalregistroegresado');
+
+        async function cargarUes() {
+            try {
+                const res = await fetch('/consulta_ues');
+                const data = await res.json();
+                selectUes.innerHTML = '<option value="">Seleccione una UES</option>';
+                data.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id_ues;
+                    opt.textContent = c.nombre_ues;
+                    selectUes.appendChild(opt);
+                });
+            } catch (error) {
+                console.error('Error al cargar las UES:', error);
+                selectCarrera.innerHTML = '<option value"">Error al cargar UES</option>';
+            }
+        }
+        modal.addEventListener('shown.bs.modal', cargarUes);
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const selectMunicipio = document.getElementById('id_municipio');
+        const modal = document.getElementById('modalregistroegresado');
+        const selectLocalidad = document.getElementById('id_localidad');
+
+
+        async function cargarMunicipio() {
+            try {
+                const res = await fetch('/consulta_municipio');
+                const data = await res.json();
+                selectMunicipio.innerHTML = '<option value="">Seleccione un Municipio</option>';
+                data.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id_municipio;
+                    opt.textContent = c.nombre_municipio;
+                    selectMunicipio.appendChild(opt);
+                });
+            } catch (error) {
+                console.error('Error al cargar los municipios:', error);
+                selectMunicipio.innerHTML = '<option value"">Error al cargar Municipio</option>';
+            }
+        }
+        async function cargarLocalidades(idMunicipio) {
+            try {
+                const res = await fetch(`/consulta_localidades/${idMunicipio}`);
+                const data = await res.json();
+                selectLocalidad.innerHTML = '<option value="">Seleccione una Localidad</option>';
+                data.forEach(l => {
+                    const opt = document.createElement('option');
+                    opt.value = l.id_localidad;
+                    opt.textContent = l.nombre_localidad;
+                    selectLocalidad.appendChild(opt);
+                });
+                selectLocalidad.disabled = false;
+            } catch (error) {
+                console.error('Error al cargar las Localidades:', error);
+                selectLocalidad.innerHTML = '<option value="">Error al cargar</option>';
+                selectLocalidad.disabled = true;
+            }
+        }
+
+        selectMunicipio.addEventListener('change', () => {
+            const id = selectMunicipio.value;
+            if (id) {
+                cargarLocalidades(id);
+            } else {
+                selectLocalidad.innerHTML = '<option value="">Seleccione una Localidad</option>';
+                selectLocalidad.disabled = true;
+            }
+        });
+
+        modal.addEventListener('shown.bs.modal', cargarMunicipio);
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const inputFotografia = document.getElementById("fotografiaegr");
+        const preview = document.getElementById("previewegr");
+
+        if (inputFotografia && preview) {
+            inputFotografia.addEventListener("change", function (event) {
+                const file = event.target.files[0];
+
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        preview.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    preview.src = "{{ url_for('static', filename='images/oswald.png') }}";
+                }
+            });
+        } else {
+            console.error("Elementos de 'fotografia' o 'previewest' no encontrados.");
+        }
+    });
+</script>
+
+<script>
+    document.getElementById("btn_registro_egresado").addEventListener("click", async function() {
+        const form = document.getElementById("registro_egresado");
+        if (!form || !(form instanceof HTMLFormElement)) {
+            console.error('Formulario #registro_egresado no encontrado o no es un formulario HTML.');
+            alert('Error interno: formulario no encontrado.');
+            return;
+        }
+
+        const formData = new FormData(form);
+
+        try {
+            const res = await fetch("/registrar_egresado", {
+                method: "POST",
+                body: formData
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                alert("Egresado registrado exitosamente.");
+                form.reset();
+
+                const preview = document.getElementById("previewegr");
+                if (preview) {
+                    preview.src = "/static/images/oswald.png";
+                }
+
+                const modalElement = document.getElementById("modalregistroegresado");
+                if (modalElement) {
+                    const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
+                    modal.hide();
+                }
+
+                // Recargar la tabla de egresados automáticamente
+                setTimeout(() => {
+                    fetch('/consulta_egresados')
+                        .then(response => response.text())
+                        .then(html => {
+                            const actualizable = document.getElementById('actualizable');
+                            if (actualizable) {
+                                actualizable.innerHTML = html;
+                                // Reinicializar DataTable después de recargar
+                                if (typeof $ !== 'undefined' && $.fn.DataTable) {
+                                    const $table = $('#egresadostable');
+                                    if ($table.length) {
+                                        $table.DataTable({
+                                            retrieve: true,
+                                            destroy: true,
+                                            language: {
+                                                lengthMenu: 'MOSTRAR _MENU_ REGISTROS POR PÁGINA',
+                                                zeroRecords: 'NO SE ENCONTRARON RESULTADOS',
+                                                info: 'MOSTRANDO PÁGINA _PAGE_ DE _PAGES_',
+                                                infoEmpty: 'NO HAY REGISTROS DISPONIBLES',
+                                                infoFiltered: '(FILTRADO DE _MAX_ REGISTROS TOTALES)',
+                                                search: 'BUSCAR:',
+                                                paginate: { first: 'PRIMERO', last: 'ÚLTIMO', next: 'SIGUIENTE', previous: 'ANTERIOR' }
+                                            },
+                                            paging: true,
+                                            lengthChange: true,
+                                            searching: true,
+                                            ordering: true,
+                                            info: true,
+                                            autoWidth: false,
+                                            responsive: true,
+                                            lengthMenu: [[3, 5, 10], [3, 5, 10]],
+                                            order: [[6, 'asc'], [3, 'asc']]
+                                        });
+                                    }
+                                }
+                            }
+                        })
+                        .catch(error => console.error('Error al recargar tabla:', error));
+                }, 500);
+            } else {
+                alert("Error al registrar al egresado: " + (data.message || "error desconocido"));
+            }
+        } catch (error) {
+            console.error("Error al enviar los datos:", error);
+            alert("Error al enviar los datos.");
+        }
+    });
+</script>

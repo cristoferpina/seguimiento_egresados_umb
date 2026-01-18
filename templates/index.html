@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seguimiento_Egresados</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{url_for('static',filename = 'css/style.css')}}">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-sm navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">UMB-UES</a>
+            <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapsibleNavId" aria-controls="collapsibleNavId" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavId">
+                <ul class="navbar-nav ms-auto mt-2 mt-lg-3">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" aria-current="page">Inicio
+                            <span class="visually-hidden">(current)</span></a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-bs-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">Login</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownId">
+                            <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                data-bs-target="#modallogincoordinador">Coordinador</a>
+                            <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                data-bs-target="#modallogincontrol">Control escolar</a>
+                            <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                data-bs-target="#modalloginehct">Encargado HCT</a>
+
+
+                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modalloginegresados">Egresado</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <footer>UMB SAN JOSÉ DEL RINCÓN</footer>
+
+    <!-- Modal Body -->
+    <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
+    <div class="modal fade" id="modallogincoordinador" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+        role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitleId">
+                        Login Coordinador
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{url_for('login_admin')}}" method="post" id="loginCoordinador">
+                        <div class="mb-3">
+                            <label for="useradmin">Numero de empleado</label>
+                            <input type="text" class="form-control" name="useradmin" id="useradmin"
+                                aria-describedby="helpId" placeholder="Numero de empleado">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password_coordi">Contraseña</label>
+                            <input type="password" class="form-control" name="password_coordi" id="password_coordi"
+                                aria-describedby="helpId" placeholder="Contraseña">
+
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cerrar
+                    </button>
+                    <button type="button" class="btn btn-primary" id="loginbtnadmin">Ingresar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Optional: Place to the bottom of scripts -->
+    <script>
+        const myModal = new bootstrap.Modal(
+            document.getElementById("modalId"),
+            options,
+        );
+    </script>
+
+    <div class="modal fade" id="modallogincontrol" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+        role="dialog" aria-labelledby="modalTitleIdControl" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitleIdControl">
+                        Login Control Escolar
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{url_for('login_control')}}" method="post" id="loginControlEscolar">
+                        <div class="mb-3">
+                            <label for="usercontrol">Número de empleado</label>
+                            <input type="text" class="form-control" name="usercontrol" id="usercontrol"
+                                placeholder="Número de empleado">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password_control">Contraseña</label>
+                            <input type="password" class="form-control" name="password_control" id="password_control"
+                                placeholder="Contraseña">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="loginbtncontrol">Ingresar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("loginbtncontrol").addEventListener("click", function () {
+            document.getElementById("loginControlEscolar").submit();
+        });
+    </script>
+
+    <div class="modal fade" id="modalloginehct" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+        role="dialog" aria-labelledby="modalTitleIdEHCT" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitleIdEHCT">
+                        Login Encargado de HCT
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{url_for('login_ehct')}}" method="post" id="loginEHCT">
+                        <div class="mb-3">
+                            <label for="userehct">Número de empleado</label>
+                            <input type="text" class="form-control" name="userehct" id="userehct"
+                                placeholder="Número de empleado">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password_ehct">Contraseña</label>
+                            <input type="password" class="form-control" name="password_ehct" id="password_ehct"
+                                placeholder="Contraseña">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="loginbtnehct">Ingresar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("loginbtnehct").addEventListener("click", function () {
+            document.getElementById("loginEHCT").submit();
+        });
+    </script>
+
+
+<!-- Login egresados-->
+
+    <div class="modal fade" id="modalloginegresados" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+        role="dialog" aria-labelledby="modalTitleIdegresados" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitleIdegresados">
+                        Login Engresados
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{url_for('login_egresados')}}" method="post" id="loginEgresados">
+                        <div class="mb-3">
+                            <label for="useregresados1">Matricula</label>
+                            <input type="text" class="form-control" name="useregresados1" id="useregresados1"
+                                placeholder="Matricula">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password_egresados">Contraseña</label>
+                            <input type="password" class="form-control" name="password_egresados" id="password_egresados"
+                                placeholder="Contraseña">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="loginbtnegresados">Ingresar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("loginbtnegresados").addEventListener("click", function () {
+            document.getElementById("loginEgresados").submit();
+        });
+    </script>
+
+<!-- Fin del login egresados -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <script>
+        document.getElementById("loginbtnadmin").addEventListener("click", function () {
+            document.getElementById("loginCoordinador").submit();
+        });
+    </script>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const error = params.get('error');
+
+        if (error === 'usuario') {
+            alert("Usuario incorrecto.");
+        } else if (error === 'contraseña') {
+            alert("Contraseña incorrecta.");
+        } else if (error === 'db') {
+            alert("No se pudo conectar a la base de datos.");
+        }
+    </script>
+</body>
+
+</html>

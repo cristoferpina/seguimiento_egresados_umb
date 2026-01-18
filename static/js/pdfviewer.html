@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Visor PDF</title>
+  <style>
+    html, body { height: 100%; margin: 0; }
+    .wrap { height: 100%; display: flex; flex-direction: column; }
+    .bar { padding: 8px; background: #f8f9fa; border-bottom: 1px solid #e5e7eb; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif; }
+    .content { flex: 1; }
+    .content embed, .content object, .content iframe { width: 100%; height: 100%; border: 0; }
+    .hint { font-size: 0.9rem; color: #555; }
+    a { color: #0d6efd; text-decoration: none; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="bar">
+    <span class="hint">Si el visor no carga, usa </span>
+    <a id="directLink" target="_blank" rel="noopener">Abrir en pestaña nueva</a>
+  </div>
+  <div class="content" id="viewer"></div>
+</div>
+<script>
+  function getParam(name) {
+    const params = new URLSearchParams(window.location.search);
+    return params.get(name);
+  }
+  const file = getParam('file');
+  const viewer = document.getElementById('viewer');
+  const link = document.getElementById('directLink');
+  if (file) {
+    try { link.href = file; } catch (_) {}
+    // Preferir <object> con fallback a <embed>
+    const obj = document.createElement('object');
+    obj.type = 'application/pdf';
+    obj.data = file;
+    obj.setAttribute('aria-label', 'Visor PDF');
+    const fallback = document.createElement('embed');
+    fallback.type = 'application/pdf';
+    fallback.src = file;
+    obj.appendChild(fallback);
+    viewer.appendChild(obj);
+  } else {
+    viewer.innerHTML = '<div style="padding:16px;">No se proporcionó archivo PDF.</div>';
+  }
+</script>
+</body>
+</html>

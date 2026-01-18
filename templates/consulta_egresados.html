@@ -1,0 +1,555 @@
+<div class="card" style="margin-top: 120px;">
+    <div class="card-header text-center">
+        <h3>Egresados Registrados </h3>
+        <button class="btn btn-success btn-sm" data-bs-toggle="modal"
+            data-bs-target="#modalregistroegresado">Nuevo</button>
+    </div>
+    <div class="card-body">
+        {% if egresados %}
+        <table class="table table-bordered table-hover" id="egresadostable">
+            <thead class="table-dark">
+                <tr>
+                    <th>Nombre del egresado</th>
+                    <th>Apellido Paterno</th>
+                    <th>Apellido Materno</th>
+                    <th>Matricula</th>
+                    <th>Correo</th>
+                    <th>Telefono</th>
+                    <th>Generación</th>
+                    <th>Modalidad</th>
+                    <th>Estatus</th>
+                    <th>Fotografia</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for egresados in egresados %}
+                {% set año_actual = 2025 %}
+                {# Extraer el último año de la generación (ejemplo: "2012-2017" -> 2017) #}
+                {% set generacion_str = egresados['generacion']|string %}
+                {% set año_egreso = generacion_str.split('-')[-1]|int if '-' in generacion_str else generacion_str|int %}
+                {% set años_transcurridos = año_actual - año_egreso %}
+                {% set titulado = egresados['estatus_titulacion']|lower == 'titulado' %}
+                
+                <tr data-row-id="{{ egresados['id_egresado'] }}">
+                    <td class="text-center">{{egresados['nombre_encargado']}}</td>
+                    <td class="text-center">{{egresados['apellido_paterno']}}</td>
+                    <td class="text-center">{{egresados['apellido_materno']}}</td>
+                    <td class="text-center">{{egresados['matricula']}}</td>
+                    <td class="text-center">{{egresados['correo']}}</td>
+                    <td class="text-center">{{egresados['telefono']}}</td>
+                    <td class="text-center">{{egresados['generacion']}}</td>
+                    <td class="text-center">{{egresados['modalidad']}}</td>
+                    <td class="text-center">
+                        {% if titulado %}
+                            <span class="badge bg-success" style="font-size: 0.9rem;">
+                                ✓ TITULADO
+                            </span>
+                        {% elif años_transcurridos < 0 %}
+                            <span class="badge bg-secondary" style="font-size: 0.9rem;">
+                                📚 AÚN EN CURSO<br>
+                                <small>Egresa en {{año_egreso}}</small>
+                            </span>
+                        {% elif años_transcurridos < 9 %}
+                            <span class="badge bg-warning text-dark" style="font-size: 0.9rem;">
+                                ⏳ NO TITULADO<br>
+                                <small>A TIEMPO ({{años_transcurridos}} años)</small>
+                            </span>
+                        {% elif años_transcurridos == 9 %}
+                            <span class="badge bg-warning text-dark" style="font-size: 0.9rem;">
+                                ⚠️ NO TITULADO<br>
+                                <small>ÚLTIMO AÑO ({{años_transcurridos}} años)</small>
+                            </span>
+                        {% elif años_transcurridos >= 10 %}
+                            <span class="badge bg-danger" style="font-size: 0.9rem;">
+                                ✗ NO TITULADO<br>
+                                <small>❌ FUERA DE TIEMPO ({{años_transcurridos}} años)</small>
+                            </span>
+                        {% else %}
+                            <span class="badge bg-secondary" style="font-size: 0.9rem;">
+                                N/A
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {% if egresados['fotografia'] %}
+                        <img id="foto_egresado" src="{{url_for('static', filename=egresados['fotografia'])}}" alt="">
+                        {% else %}
+                        <img id="foto_egresado" src="{{url_for('static', filename='uploads/egresados/1.jpg')}}" alt="">
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-primary btn-ver-reticula" 
+                                data-matricula="{{ egresados['matricula'] }}"
+                                data-nombre="{{ egresados['nombre_encargado'] }} {{ egresados['apellido_paterno'] }}">
+                            📄 Ver retícula
+                        </button>
+                        <br>
+                        <button class="btn btn-info btn-sm btn-actualizar" data-bs-toggle="modal"
+                            data-bs-target="#modalactualizaregresado" data-egresado='{{ egresados | tojson }}'>
+                            Actualizar
+                        </button>
+                        <button class="btn btn-danger btn-sm btn-eliminar" data-id="{{ egresados['id_egresado'] }}"
+                            data-nombre="{{ egresados['nombre_encargado'] }} {{ egresados['apellido_paterno'] }} {{ egresados['apellido_materno'] }}">
+                            Eliminar
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="text-center"> No hay registros disponibles.</p>
+        {% endif %}
+    </div>
+    <div class="card-footer text-muted">Todos los derechos reservados</div>
+    {% include 'formulario_actualizacion_egresado.html' %}
+</div>
+
+<!-- Modal para visualizar retícula PDF -->
+<div class="modal fade" id="modalVerReticula" tabindex="-1" aria-labelledby="modalReticulaTitulo" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="modalReticulaTitulo">📄 Retícula del Egresado</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="min-height:70vh;">
+                <div id="mensajeReticulaNoDisponible" class="alert alert-warning d-none" role="alert">
+                    <strong>⚠️ Documento no disponible</strong><br>
+                    No se encontró el archivo de retícula para este egresado.
+                </div>
+                <div class="d-flex align-items-center gap-2 mb-3 p-2 bg-light rounded" id="controlesReticula" style="display:none !important;">
+                    <button id="pdfPrevBtn" class="btn btn-sm btn-outline-secondary" type="button">◀️ Anterior</button>
+                    <button id="pdfNextBtn" class="btn btn-sm btn-outline-secondary" type="button">Siguiente ▶️</button>
+                    <div class="vr"></div>
+                    <button id="pdfZoomOutBtn" class="btn btn-sm btn-outline-secondary" type="button">🔍− Zoom</button>
+                    <button id="pdfZoomInBtn" class="btn btn-sm btn-outline-secondary" type="button">🔍+ Zoom</button>
+                    <span id="pdfPageInfo" class="text-muted ms-2 fw-bold"></span>
+                </div>
+                <div id="contenedorPDFReticula" style="min-height:70vh; background:#f8f9fa; border-radius:5px; display:flex; align-items:center; justify-content:center;">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <a id="linkAbrirPDFNueva" class="btn btn-primary d-none" target="_blank" rel="noopener">
+                    🔗 Abrir en pestaña nueva
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    #foto_egresado {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+    
+    .badge {
+        padding: 8px 12px;
+        line-height: 1.4;
+    }
+    
+    .badge small {
+        display: block;
+        margin-top: 2px;
+        font-size: 0.75rem;
+    }
+
+    #contenedorPDFReticula canvas {
+        border: 1px solid #dee2e6;
+        border-radius: 5px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        max-width: 100%;
+    }
+
+    .modal-xl {
+        max-width: 90%;
+    }
+</style>
+
+<!-- pdf.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    (function() {
+        console.log('🚀 Script de egresados cargado');
+        
+        // Configurar pdf.js worker
+        if (window.pdfjsLib) {
+            window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+            console.log('✅ pdf.js configurado');
+        }
+
+        // Esperar a que el DOM esté listo
+        function inicializar() {
+            console.log('🔧 Inicializando event listeners');
+
+            const actualizarButtons = document.querySelectorAll('.btn-actualizar');
+            console.log(`📊 Encontrados ${actualizarButtons.length} botones actualizar`);
+
+            function setValue(id, value) {
+                const el = document.getElementById(id);
+                if (!el) return;
+                if (['INPUT', 'SELECT', 'TEXTAREA'].includes(el.tagName)) {
+                    el.value = value != null ? value : '';
+                    el.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+            }
+
+            // Actualizar egresado
+            actualizarButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    let eg = null;
+                    try { eg = JSON.parse(btn.getAttribute('data-egresado')); } catch (e) { console.error('JSON inválido', e); return; }
+
+                    setValue('id_egresado_ac', eg?.id_egresado);
+                    setValue('nombre_egresado_ac', eg?.nombre_encargado);
+                    setValue('apellido_paterno_ac', eg?.apellido_paterno);
+                    setValue('apellido_materno_ac', eg?.apellido_materno);
+                    setValue('matricula_ac', eg?.matricula);
+                    setValue('correo_ac', eg?.correo);
+                    setValue('telefono_ac', eg?.telefono);
+                    setValue('generacion_ac', eg?.generacion);
+                    setValue('modalidad', eg?.modalidad);
+                    setValue('estatus_titulacion_ac', eg?.estatus_titulacion);
+                    setValue('estatus_laboral_ac', eg?.estatus_laboral);
+                    setValue('id_carrera_ac', eg?.id_carrera);
+                    setValue('id_ues_ac', eg?.id_ues);
+                    setValue('id_municipio_ac', eg?.id_municipio);
+                    setValue('id_localidad_ac', eg?.id_localidad);
+
+                    const preview = document.getElementById('previewegr');
+                    if (preview) {
+                        if (eg?.fotografia) {
+                            const ruta = eg.fotografia.startsWith('uploads/') ? `/static/${eg.fotografia}` : eg.fotografia;
+                            preview.src = ruta;
+                        } else {
+                            preview.src = '/static/egresados/1.jpg';
+                        }
+                    }
+
+                    ['estatus_titulacion_ac', 'estatus_laboral_ac', 'modalidad'].forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) el.dispatchEvent(new Event('change', { bubbles: true }));
+                    });
+                });
+            });
+
+            // VER RETÍCULA - Event delegation para botones dinámicos
+            document.body.addEventListener('click', async function(ev) {
+                const target = ev.target.closest('button.btn-ver-reticula');
+                if (!target) return;
+                
+                ev.preventDefault();
+                console.log('🔍 Botón Ver retícula clickeado');
+
+                const matricula = target.getAttribute('data-matricula');
+                const nombreEgresado = target.getAttribute('data-nombre');
+
+                console.log('📋 Matrícula:', matricula);
+                console.log('👤 Nombre:', nombreEgresado);
+
+                if (!matricula) {
+                    alert('❌ No se encontró la matrícula del egresado.');
+                    return;
+                }
+
+                // Construir ruta del PDF basada en la matrícula
+                const rutaPDF = `/static/uploads/modalidades/${matricula}.pdf`;
+                console.log('📂 Ruta PDF:', rutaPDF);
+
+                const modalEl = document.getElementById('modalVerReticula');
+                const tituloEl = document.getElementById('modalReticulaTitulo');
+                const contenedorPDF = document.getElementById('contenedorPDFReticula');
+                const mensajeNoDisponible = document.getElementById('mensajeReticulaNoDisponible');
+                const linkAbrirNueva = document.getElementById('linkAbrirPDFNueva');
+                const controlesReticula = document.getElementById('controlesReticula');
+
+                if (!modalEl) {
+                    console.error('❌ Modal no encontrado');
+                    alert('Error: Modal no encontrado en el DOM');
+                    return;
+                }
+
+                console.log('✅ Modal encontrado');
+
+                // Actualizar título
+                if (tituloEl) {
+                    tituloEl.textContent = `📄 Retícula de ${nombreEgresado || 'Egresado'} (${matricula})`;
+                }
+
+                // Reset estado
+                contenedorPDF.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div>';
+                mensajeNoDisponible.classList.add('d-none');
+                controlesReticula.style.display = 'none';
+                if (linkAbrirNueva) {
+                    linkAbrirNueva.classList.add('d-none');
+                    linkAbrirNueva.removeAttribute('href');
+                }
+
+                // Primero abrir el modal
+                console.log('🚪 Intentando abrir modal...');
+                try {
+                    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                        const bsModal = new bootstrap.Modal(modalEl);
+                        bsModal.show();
+                        console.log('✅ Modal abierto con Bootstrap');
+                    } else {
+                        // Fallback manual
+                        modalEl.classList.add('show');
+                        modalEl.style.display = 'block';
+                        modalEl.setAttribute('aria-modal', 'true');
+                        modalEl.removeAttribute('aria-hidden');
+                        
+                        const backdrop = document.createElement('div');
+                        backdrop.className = 'modal-backdrop fade show';
+                        backdrop.id = 'modalReticulaBackdrop';
+                        document.body.appendChild(backdrop);
+                        document.body.classList.add('modal-open');
+                        console.log('✅ Modal abierto manualmente');
+                    }
+                } catch (error) {
+                    console.error('❌ Error abriendo modal:', error);
+                    alert('Error al abrir el modal: ' + error.message);
+                    return;
+                }
+
+                // Luego verificar y cargar el PDF
+                try {
+                    console.log('🔄 Verificando existencia del archivo...');
+                    const checkResponse = await fetch(rutaPDF, { method: 'HEAD' });
+                    
+                    console.log('📡 Status de verificación:', checkResponse.status);
+                    
+                    if (!checkResponse.ok) {
+                        // Archivo no existe
+                        console.warn('⚠️ Archivo no encontrado');
+                        contenedorPDF.innerHTML = '';
+                        mensajeNoDisponible.classList.remove('d-none');
+                        mensajeNoDisponible.innerHTML = `
+                            <div class="text-center py-5">
+                                <i style="font-size: 4rem; color: #ffc107;">📭</i>
+                                <h4 class="mt-3 mb-2">Documento No Disponible</h4>
+                                <p class="text-muted">No se encontró el archivo de retícula para la matrícula <strong>${matricula}</strong>.</p>
+                                <small class="text-muted d-block mt-3">Ruta esperada: <code>${rutaPDF}</code></small>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    // Archivo existe, mostrar PDF
+                    console.log('✅ Archivo encontrado, cargando PDF...');
+                    controlesReticula.style.display = 'flex';
+                    if (linkAbrirNueva) {
+                        linkAbrirNueva.href = rutaPDF;
+                        linkAbrirNueva.classList.remove('d-none');
+                    }
+
+                    renderizarPDF(rutaPDF, contenedorPDF);
+
+                } catch (error) {
+                    console.error('❌ Error al verificar/cargar archivo:', error);
+                    contenedorPDF.innerHTML = '';
+                    mensajeNoDisponible.classList.remove('d-none');
+                    mensajeNoDisponible.innerHTML = `
+                        <div class="text-center py-5">
+                            <i style="font-size: 4rem; color: #dc3545;">❌</i>
+                            <h4 class="mt-3 mb-2">Error al Cargar Documento</h4>
+                            <p class="text-muted">No se pudo verificar la existencia del archivo.</p>
+                            <small class="text-muted d-block mt-3">Error: ${error.message}</small>
+                        </div>
+                    `;
+                }
+            });
+
+            // Función para renderizar PDF con pdf.js
+            function renderizarPDF(src, contenedor) {
+                console.log('🎨 Renderizando PDF:', src);
+                
+                if (!window.pdfjsLib) {
+                    console.warn('⚠️ pdf.js no disponible, usando embed');
+                    // Fallback: usar embed si pdf.js no está disponible
+                    const embedEl = document.createElement('embed');
+                    embedEl.type = 'application/pdf';
+                    embedEl.src = src;
+                    embedEl.style.width = '100%';
+                    embedEl.style.height = '70vh';
+                    embedEl.setAttribute('aria-label', 'Visor PDF');
+                    contenedor.innerHTML = '';
+                    contenedor.appendChild(embedEl);
+                    return;
+                }
+
+                let pdfDoc = null;
+                let currentPage = 1;
+                let scale = 1.2;
+
+                const renderPage = (num) => {
+                    contenedor.innerHTML = '<div class="text-center"><div class="spinner-border text-primary" role="status"></div><p class="mt-2">Renderizando página...</p></div>';
+                    
+                    const canvas = document.createElement('canvas');
+                    canvas.style.maxWidth = '100%';
+                    const ctx = canvas.getContext('2d');
+
+                    pdfDoc.getPage(num).then(page => {
+                        const viewport = page.getViewport({ scale });
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
+                        const renderContext = { canvasContext: ctx, viewport };
+                        
+                        contenedor.innerHTML = '';
+                        contenedor.appendChild(canvas);
+                        
+                        return page.render(renderContext).promise;
+                    }).then(() => {
+                        const info = document.getElementById('pdfPageInfo');
+                        if (info) info.textContent = `Página ${currentPage} de ${pdfDoc.numPages}`;
+                        console.log(`✅ Página ${currentPage} renderizada`);
+                    }).catch(err => {
+                        console.warn('⚠️ Error renderizando página', err);
+                        // Fallback a embed
+                        const embedEl = document.createElement('embed');
+                        embedEl.type = 'application/pdf';
+                        embedEl.src = src;
+                        embedEl.style.width = '100%';
+                        embedEl.style.height = '70vh';
+                        contenedor.innerHTML = '';
+                        contenedor.appendChild(embedEl);
+                    });
+                };
+
+                // Controles de navegación
+                const prev = document.getElementById('pdfPrevBtn');
+                const next = document.getElementById('pdfNextBtn');
+                const zoomIn = document.getElementById('pdfZoomInBtn');
+                const zoomOut = document.getElementById('pdfZoomOutBtn');
+
+                if (prev) prev.onclick = () => { 
+                    if (currentPage > 1) { 
+                        currentPage -= 1; 
+                        renderPage(currentPage); 
+                    }
+                };
+                if (next) next.onclick = () => { 
+                    if (pdfDoc && currentPage < pdfDoc.numPages) { 
+                        currentPage += 1; 
+                        renderPage(currentPage); 
+                    }
+                };
+                if (zoomOut) zoomOut.onclick = () => { 
+                    scale = Math.max(scale - 0.2, 0.6); 
+                    renderPage(currentPage); 
+                };
+                if (zoomIn) zoomIn.onclick = () => { 
+                    scale = Math.min(scale + 0.2, 3.0); 
+                    renderPage(currentPage); 
+                };
+
+                // Cargar PDF
+                console.log('📥 Cargando documento PDF...');
+                window.pdfjsLib.getDocument({ url: src }).promise.then(pdf => {
+                    console.log('✅ PDF cargado exitosamente');
+                    pdfDoc = pdf;
+                    currentPage = 1;
+                    renderPage(currentPage);
+                }).catch(err => {
+                    console.warn('⚠️ Error cargando PDF con pdf.js', err);
+                    const alerta = document.createElement('div');
+                    alerta.className = 'alert alert-warning';
+                    alerta.textContent = 'No se pudo renderizar con pdf.js. Mostrando visor embebido.';
+                    contenedor.innerHTML = '';
+                    contenedor.appendChild(alerta);
+                    const embedEl = document.createElement('embed');
+                    embedEl.type = 'application/pdf';
+                    embedEl.src = src;
+                    embedEl.style.width = '100%';
+                    embedEl.style.height = '70vh';
+                    contenedor.appendChild(embedEl);
+                });
+            }
+
+            // Eliminación directa
+            document.body.addEventListener('click', async function(ev) {
+                const target = ev.target.closest('button.btn-eliminar');
+                if (!target) return;
+                ev.preventDefault();
+                
+                const id = target.getAttribute('data-id');
+                const nombre = target.getAttribute('data-nombre') || '';
+                if (!id) {
+                    alert('No se encontró el ID del egresado.');
+                    return;
+                }
+                
+                if (!confirm(`¿Está seguro de eliminar al egresado ${nombre}?`)) {
+                    return;
+                }
+                
+                try {
+                    target.disabled = true;
+                    target.textContent = 'Borrando…';
+
+                    let resp = await fetch(`/eliminar_egresado/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' },
+                        credentials: 'same-origin'
+                    });
+                    
+                    if (!resp.ok && (resp.status === 405 || resp.status === 404)) {
+                        resp = await fetch(`/eliminar_egresado/${id}`, {
+                            method: 'POST',
+                            headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' },
+                            credentials: 'same-origin'
+                        });
+                    }
+
+                    let data;
+                    try { data = await resp.json(); } catch (_) { 
+                        data = { success: false, message: 'Respuesta no válida del servidor' }; 
+                    }
+
+                    if (resp.ok && data.success) {
+                        const fila = target.closest('tr') || document.querySelector(`tr[data-row-id="${id}"]`);
+                        try {
+                            const $tabla = window.jQuery ? window.jQuery('#egresadostable') : null;
+                            if ($tabla && $tabla.length && window.jQuery.fn.DataTable) {
+                                const dt = $tabla.DataTable();
+                                dt.row(fila).remove().draw(false);
+                            } else if (fila) {
+                                fila.remove();
+                            }
+                        } catch (e) {
+                            if (fila) fila.remove();
+                        }
+                        
+                        alert('Egresado eliminado correctamente');
+                    } else {
+                        alert(data.message || `Error al eliminar egresado (HTTP ${resp.status})`);
+                    }
+                } catch (e) {
+                    console.error('Error de red al eliminar egresado:', e);
+                    alert('Error de red al eliminar egresado');
+                } finally {
+                    target.disabled = false;
+                    target.textContent = 'Eliminar';
+                }
+            });
+
+            console.log('✅ Event listeners configurados');
+        }
+
+        // Ejecutar inicialización
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', inicializar);
+        } else {
+            inicializar();
+        }
+    })();
+</script>

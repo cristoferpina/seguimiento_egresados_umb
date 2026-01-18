@@ -1,0 +1,90 @@
+<!-- Modal de actualización de egresado -->
+<div class="modal fade" id="modalactualizaregresado" tabindex="-1" aria-labelledby="modalActualizarEgresadoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalActualizarEgresadoLabel">Actualizar egresado</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="form_actualizacion_egresado">
+          <input type="hidden" id="id_egresado_ac" name="id_egresado_ac" />
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label for="nombre_egresado_ac" class="form-label">Nombre</label>
+              <input type="text" class="form-control" id="nombre_egresado_ac" name="nombre_egresado_ac" />
+            </div>
+            <div class="col-md-4">
+              <label for="apellido_paterno_ac" class="form-label">Apellido paterno</label>
+              <input type="text" class="form-control" id="apellido_paterno_ac" name="apellido_paterno_ac" />
+            </div>
+            <div class="col-md-4">
+              <label for="apellido_materno_ac" class="form-label">Apellido materno</label>
+              <input type="text" class="form-control" id="apellido_materno_ac" name="apellido_materno_ac" />
+            </div>
+            <div class="col-md-4">
+              <label for="matricula_ac" class="form-label">Matrícula</label>
+              <input type="text" class="form-control" id="matricula_ac" name="matricula_ac" />
+            </div>
+            <div class="col-md-4">
+              <label for="correo_ac" class="form-label">Correo</label>
+              <input type="email" class="form-control" id="correo_ac" name="correo_ac" />
+            </div>
+            <div class="col-md-4">
+              <label for="telefono_ac" class="form-label">Teléfono</label>
+              <input type="text" class="form-control" id="telefono_ac" name="telefono_ac" />
+            </div>
+            <div class="col-md-4">
+              <label for="generacion_ac" class="form-label">Generación</label>
+              <input type="text" class="form-control" id="generacion_ac" name="generacion_ac" />
+            </div>
+            <div class="col-md-4">
+              <label for="modalidad" class="form-label">Modalidad</label>
+              <select class="form-select" id="modalidad" name="modalidad">
+                <option value="">Seleccione...</option>
+                <option value="I">I</option>
+                <option value="II">II</option>
+                <option value="III">III</option>
+                <option value="VI">VI</option>
+                <option value="VIII">VIII</option>
+                <option value="XI">XI</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label for="estatus_titulacion_ac" class="form-label">Estatus titulación</label>
+              <input type="text" class="form-control" id="estatus_titulacion_ac" name="estatus_titulacion_ac" />
+            </div>
+            <div class="col-md-4">
+              <label for="estatus_laboral_ac" class="form-label">Estatus laboral</label>
+              <input type="text" class="form-control" id="estatus_laboral_ac" name="estatus_laboral_ac" />
+            </div>
+            <div class="col-md-4">
+              <label for="id_carrera_ac" class="form-label">Carrera</label>
+              <select class="form-select" id="id_carrera_ac" name="id_carrera_ac"></select>
+            </div>
+            <div class="col-md-4">
+              <label for="id_ues_ac" class="form-label">UES</label>
+              <select class="form-select" id="id_ues_ac" name="id_ues_ac"></select>
+            </div>
+            <div class="col-md-4">
+              <label for="id_municipio_ac" class="form-label">Municipio</label>
+              <select class="form-select" id="id_municipio_ac" name="id_municipio_ac"></select>
+            </div>
+            <div class="col-md-4">
+              <label for="id_localidad_ac" class="form-label">Localidad</label>
+              <select class="form-select" id="id_localidad_ac" name="id_localidad_ac"></select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Fotografía</label>
+              <img id="previewegr" class="img-thumbnail" src="/static/uploads/egresados/1.jpg" alt="preview" />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" id="guardar_actualizacion">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>

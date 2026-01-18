@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.dist-info/
+*.egg-info/
+
+# Entornos virtuales
+seguimiento_egresados_umb/
+venv/
+.venv/
+env/
+ENV/
+
+# Configuración y entorno
+.env
+.env.*
+.vscode/
+
+# SO/Editor
+Thumbs.db
+.DS_Store
+
+# Logs
+*.log
+
+# Subidas y artefactos
+static/uploads/
