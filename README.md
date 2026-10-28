@@ -4,7 +4,9 @@
 
 # Seguimiento de egresados UMB
 
-Aplicación web y herramientas de Telegram para el seguimiento académico.
+**El seguimiento académico también puede llegar a Telegram.**
+
+Aplicación que combina paneles web para distintos roles con un bot y recordatorios para el seguimiento de egresados de la UMB.
 
 <img alt="Python" src="https://img.shields.io/badge/Python-0F172A?style=for-the-badge" />
 <img alt="Flask" src="https://img.shields.io/badge/Flask-1D4ED8?style=for-the-badge" />
@@ -16,6 +18,17 @@ Aplicación web y herramientas de Telegram para el seguimiento académico.
 [Código fuente](https://github.com/cristoferpina/seguimiento_egresados_umb) &nbsp; / &nbsp; [Incidencias](https://github.com/cristoferpina/seguimiento_egresados_umb/issues) &nbsp; / &nbsp; [Perfil](https://github.com/cristoferpina)
 
 </div>
+
+## Una mirada al proyecto
+
+| Qué encontrarás | Por qué explorarlo |
+| --- | --- |
+| El seguimiento académico también puede llegar a Telegram. | Aplicación que combina paneles web para distintos roles con un bot y recordatorios para el seguimiento de egresados de la UMB. |
+| Trabajo de desarrollo | Integración de Flask, MySQL y Telegram; formularios, archivos y flujos de consulta por rol. |
+
+**[Explora los paneles de la aplicación →](templates/)**
+
+
 
 ---
 
