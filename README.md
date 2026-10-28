@@ -1,4 +1,16 @@
-# Seguimiento de Egresados UMB
+<div align="center">
+
+# 🎓 Seguimiento de egresados UMB
+
+Aplicación web y herramientas de Telegram para el seguimiento académico.
+
+**Python · Flask · MySQL · Telegram**
+
+[Explorar código](https://github.com/cristoferpina/seguimiento_egresados_umb) · [Reportar un problema](https://github.com/cristoferpina/seguimiento_egresados_umb/issues)
+
+</div>
+
+---
 
 Aplicación web con Flask y un Bot de Telegram para gestionar el seguimiento de egresados de la Universidad Mexiquense del Bicentenario. Incluye paneles por rol, registro y actualización de egresados, consulta de catálogos (carreras, UES, municipios, localidades), subida de archivos (fotografías y documentos de modalidad), y notificaciones automáticas por Telegram sobre el tiempo límite de titulación.
 
