@@ -1,18 +1,31 @@
 <div align="center">
 
-# 🎓 Seguimiento de egresados UMB
+<sub>CRISTOFER PIÑA · DESARROLLO DE SOFTWARE</sub>
+
+# Seguimiento de egresados UMB
 
 Aplicación web y herramientas de Telegram para el seguimiento académico.
 
-**Python · Flask · MySQL · Telegram**
+<img alt="Python" src="https://img.shields.io/badge/Python-0F172A?style=for-the-badge" />
+<img alt="Flask" src="https://img.shields.io/badge/Flask-1D4ED8?style=for-the-badge" />
+<img alt="MySQL" src="https://img.shields.io/badge/MySQL-0F766E?style=for-the-badge" />
+<img alt="Telegram" src="https://img.shields.io/badge/Telegram-475569?style=for-the-badge" />
 
-[Explorar código](https://github.com/cristoferpina/seguimiento_egresados_umb) · [Reportar un problema](https://github.com/cristoferpina/seguimiento_egresados_umb/issues)
+**Universidad Mexiquense del Bicentenario**
+
+[Código fuente](https://github.com/cristoferpina/seguimiento_egresados_umb) &nbsp; / &nbsp; [Incidencias](https://github.com/cristoferpina/seguimiento_egresados_umb/issues) &nbsp; / &nbsp; [Perfil](https://github.com/cristoferpina)
 
 </div>
 
 ---
 
+[Características](#seccion-1) · [Estructura del proyecto](#seccion-2) · [Requisitos previos](#seccion-3) · [Instalación](#seccion-4) · [Configuración de base de datos](#seccion-5)
+
+---
+
 Aplicación web con Flask y un Bot de Telegram para gestionar el seguimiento de egresados de la Universidad Mexiquense del Bicentenario. Incluye paneles por rol, registro y actualización de egresados, consulta de catálogos (carreras, UES, municipios, localidades), subida de archivos (fotografías y documentos de modalidad), y notificaciones automáticas por Telegram sobre el tiempo límite de titulación.
+
+<a id="seccion-1"></a>
 
 ## Características
 - Paneles por rol: Administrador, Control Escolar, Encargado HCT y Egresados.
@@ -23,6 +36,8 @@ Aplicación web con Flask y un Bot de Telegram para gestionar el seguimiento de 
 - Bot de Telegram para enlazar teléfono → perfil y consultar información.
 - Script de notificaciones automáticas (último año, un año restante, plazo vencido).
 
+<a id="seccion-2"></a>
+
 ## Estructura del proyecto
 - [app.py](app.py): Aplicación Flask (rutas, vistas, CRUD de egresados, endpoints JSON).
 - [botfather.py](botfather.py): Bot de Telegram (enlace por teléfono, consultas y cálculos de titulación).
@@ -32,10 +47,14 @@ Aplicación web con Flask y un Bot de Telegram para gestionar el seguimiento de 
 - [templates/](templates): Plantillas HTML (paneles y formularios).
 - [static/](static): CSS, JS, imágenes, y carpetas de subida (`static/uploads/egresados`, `static/uploads/modalidades`).
 
+<a id="seccion-3"></a>
+
 ## Requisitos previos
 - Python 3.10+
 - MySQL/MariaDB
 - Telegram Bot Token (creado con @BotFather)
+
+<a id="seccion-4"></a>
 
 ## Instalación
 1. (Opcional) Activar el entorno virtual existente en Windows PowerShell:
@@ -52,6 +71,8 @@ Aplicación web con Flask y un Bot de Telegram para gestionar el seguimiento de 
    pip install Flask PyMySQL python-dotenv pyTelegramBotAPI requests
    ```
 
+<a id="seccion-5"></a>
+
 ## Configuración de base de datos
 1. Crear la base de datos e importar el script:
    ```powershell
@@ -65,6 +86,8 @@ Aplicación web con Flask y un Bot de Telegram para gestionar el seguimiento de 
 
 > Nota: Las credenciales están actualmente hardcodeadas en `app.py`, `botfather.py` y `notificador_automatico.py`. Ajusta estos archivos si tu entorno difiere.
 
+<a id="seccion-6"></a>
+
 ## Variables de entorno (.env) — opcional
 Puedes crear un archivo `.env` en la raíz para centralizar credenciales:
 ```
@@ -75,6 +98,8 @@ DB_PASSWORD=
 DB_NAME=seguimiento_egresados_umb
 ```
 En el código del bot ya se carga `dotenv`, pero el token está hardcodeado. Reemplázalo o modifica el archivo para leer `TELEGRAM_BOT_TOKEN` desde `.env`.
+
+<a id="seccion-7"></a>
 
 ## Ejecución
 - Iniciar la aplicación web (Flask):
@@ -95,6 +120,8 @@ En el código del bot ya se carga `dotenv`, pero el token está hardcodeado. Ree
   python notificador_automatico.py
   ```
   - Envía recordatorios a egresados con `id_bot` enlazado y `estatus_titulacion` distinto de `Titulado`.
+
+<a id="seccion-8"></a>
 
 ## Rutas principales (Flask)
 - `/` → Inicio (login por rol en [index.html](templates/index.html)).
@@ -119,16 +146,22 @@ En el código del bot ya se carga `dotenv`, pero el token está hardcodeado. Ree
 - `GET /consulta_municipio` → JSON `{id_municipio, nombre_municipio}`.
 - `GET /consulta_localidades/<id_municipio>` → JSON `{id_localidad, nombre_localidad}` por municipio.
 
+<a id="seccion-9"></a>
+
 ## Subida de archivos
 - Fotografías: `static/uploads/egresados/`
 - Documentos de modalidad: `static/uploads/modalidades/`
 - Se crean automáticamente si no existen.
+
+<a id="seccion-10"></a>
 
 ## Seguridad y recomendaciones
 - Reemplaza el token del bot hardcodeado en [botfather.py](botfather.py) y [notificador_automatico.py](notificador_automatico.py) por una variable de entorno.
 - No uses credenciales vacías en producción. Configura usuario y contraseña de MySQL seguros.
 - Considera hashear y verificar contraseñas con `werkzeug.security` en todos los flujos (algunos ya usan `generate_password_hash`).
 - Configura `SECRET_KEY` mediante entorno y desactiva `debug=True` en producción.
+
+<a id="seccion-11"></a>
 
 ## Despliegue y tareas programadas
 - Despliegue Flask: usar `gunicorn`/`waitress` detrás de Nginx/IIS según plataforma.
@@ -137,5 +170,13 @@ En el código del bot ya se carga `dotenv`, pero el token está hardcodeado. Ree
   - Windows: Programar con Task Scheduler (por ejemplo, diario a las 08:00).
   - Linux: `cron` (ejemplo: `0 8 * * * /usr/bin/python /ruta/notificador_automatico.py`).
 
+<a id="seccion-12"></a>
+
 ## Licencia
 Proyecto interno académico/administrativo. Ajusta la licencia según las políticas de la UMB.
+
+---
+
+<div align="center">
+<sub>Desarrollado por <a href="https://github.com/cristoferpina">Cristofer Piña</a> · Universidad Mexiquense del Bicentenario</sub>
+</div>
